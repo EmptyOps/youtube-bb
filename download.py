@@ -40,4 +40,7 @@ if __name__ == '__main__':
           "Usage: python download.py [VIDEO_DIR] [NUM_THREADS]"
   # Use the directory `videos` in the current working directory by
   # default, or a directory specified on the command line.
+if len(sys.argv) >= 4:
+  parse_and_sched(sys.argv[1],int(sys.argv[2]),int(sys.argv[3]))
+else:  
   parse_and_sched(sys.argv[1],int(sys.argv[2]))
