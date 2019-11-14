@@ -47,10 +47,11 @@ why](http://www.markbuckler.com/post/cutting-ffmpeg/)) the bottleneck is
 compute speed rather than download speed. For this reason, set the number of
 threads to the number of cores on your machine for best results.
 
-	python3 download.py [VID_DIR] [NUM_THREADS]
+	python3 download.py [VID_DIR] [NUM_THREADS] [CLASS_FILTER]
 
 - `[VID_DIR]` Directory to download videos into
 - `[NUM_THREADS` Number of threads to use for downloading and cutting
+- `[CLASS_FILTER` leave blank to download all class or specify class id for e.g 0 for person class to dowanload specific class
 
 ### Object Detection Decoder & VOC 2007 Converter
 
