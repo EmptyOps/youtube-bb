@@ -234,7 +234,7 @@ def parse_annotations(d_set,dl_dir,dl_cls_by_filter=-1):
     class_id = annotation[2]
 
     #added filter to download only specified class in the filter 
-    if not dl_cls_by_filter == -1 and not dl_cls_by_filter == class_id:
+    if not dl_cls_by_filter == -1 and not (int(dl_cls_by_filter)+1) == (int(class_id)+1):
       continue
 
     clip_name = yt_id+'+'+class_id+'+'+obj_id
