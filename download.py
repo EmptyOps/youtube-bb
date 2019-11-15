@@ -22,7 +22,7 @@ import sys
 from subprocess import check_call
 
 # Parse the annotation csv file and schedule downloads and cuts
-def parse_and_sched(dl_dir='videos',num_threads=4):
+def parse_and_sched(dl_dir='videos',num_threads=4,dl_cls_by_filter=-1):
   """Download the entire youtube-bb data set into `dl_dir`.
   """
 
@@ -31,7 +31,7 @@ def parse_and_sched(dl_dir='videos',num_threads=4):
 
   # For each of the four datasets
   for d_set in youtube_bb.d_sets:
-    annotations,clips,vids = youtube_bb.parse_annotations(d_set,dl_dir)
+    annotations,clips,vids = youtube_bb.parse_annotations(d_set,dl_dir,dl_cls_by_filter)
     youtube_bb.sched_downloads(d_set,dl_dir,num_threads,vids)
 
 if __name__ == '__main__':
