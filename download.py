@@ -36,8 +36,8 @@ def parse_and_sched(dl_dir='videos',num_threads=4):
 
 if __name__ == '__main__':
 
-  assert(len(sys.argv) == 3), \
-          "Usage: python download.py [VIDEO_DIR] [NUM_THREADS]"
+  assert(len(sys.argv) <= 4), \
+          "Usage: python download.py [VIDEO_DIR] [NUM_THREADS] [CLASS_FILTER(optional)]"
   # Use the directory `videos` in the current working directory by
   # default, or a directory specified on the command line.
 if len(sys.argv) >= 4:
