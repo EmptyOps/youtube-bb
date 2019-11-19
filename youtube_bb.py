@@ -290,7 +290,7 @@ def parse_annotations(d_set,dl_dir,dl_cls_by_filter=-1):
 
   return annotations,clips,vids
 
-def sched_downloads(d_set,dl_dir,num_threads,vids):
+def sched_downloads(d_set,dl_dir,num_threads,vids,rec_ind=-1,offset_min=-1,offset_max=-1):
   d_set_dir = dl_dir+'/'+d_set+'/'
 
   # Make the directory for this dataset
@@ -298,6 +298,16 @@ def sched_downloads(d_set,dl_dir,num_threads,vids):
 
   # Tell the user when downloads were started
   datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+  #offset
+  if not offset_min == -1:
+    vids_tmp = []
+    for vid in vids:
+      rec_ind = rec_ind + 1
+      if rec_ind >= offset_min and rec_ind <= offset_max:
+        vids_tmp.append(vid)
+
+    vids = vids_tmp
 
   # Download and cut in parallel threads giving
   with futures.ProcessPoolExecutor(max_workers=num_threads) as executor:
@@ -307,5 +317,9 @@ def sched_downloads(d_set,dl_dir,num_threads,vids):
       sys.stderr.write( \
         "Downloaded video: {} / {} \r".format(i, len(vids)))
 
-  print( d_set+': All videos downloaded' )
+  if len(vids) == 0 and not offset_min == -1:
+    print( 'No video found for downloading in dataset '+d_set+'. If this is not intended behaviour, please check whether your offset is set correctly or not' )
+  else:
+    print( d_set+': All videos downloaded' )
 
+  return rec_ind
