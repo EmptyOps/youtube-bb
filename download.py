@@ -22,7 +22,7 @@ import sys
 from subprocess import check_call
 
 # Parse the annotation csv file and schedule downloads and cuts
-def parse_and_sched(dl_dir='videos',num_threads=4,dl_cls_by_filter=-1):
+def parse_and_sched(dl_dir='videos',num_threads=4,dl_cls_by_filter=-1,offset_min=-1,offset_max=-1):
   """Download the entire youtube-bb data set into `dl_dir`.
   """
 
@@ -30,17 +30,23 @@ def parse_and_sched(dl_dir='videos',num_threads=4,dl_cls_by_filter=-1):
   check_call(['mkdir', '-p', dl_dir])
 
   # For each of the four datasets
+  rec_ind = -1
   for d_set in youtube_bb.d_sets:
+
     annotations,clips,vids = youtube_bb.parse_annotations(d_set,dl_dir,dl_cls_by_filter)
-    youtube_bb.sched_downloads(d_set,dl_dir,num_threads,vids)
+    rec_ind = youtube_bb.sched_downloads(d_set,dl_dir,num_threads,vids,rec_ind,offset_min,offset_max)
 
 if __name__ == '__main__':
 
-  assert(len(sys.argv) <= 4), \
-          "Usage: python download.py [VIDEO_DIR] [NUM_THREADS] [CLASS_FILTER(optional)]"
+  assert(len(sys.argv) <= 6), \
+          "Usage: python download.py [VIDEO_DIR] [NUM_THREADS] [CLASS_FILTER(optional)] [offset_min(optional, offset work with accumulated sum of all 4 datasets)] [offset_max(optional, offset work with accumulated sum of all 4 datasets)]"
   # Use the directory `videos` in the current working directory by
   # default, or a directory specified on the command line.
-if len(sys.argv) >= 4:
+if len(sys.argv) >= 6:
+  parse_and_sched(sys.argv[1],int(sys.argv[2]),int(sys.argv[3]),int(sys.argv[4]),int(sys.argv[5]))
+elif len(sys.argv) >= 5:
+  parse_and_sched(sys.argv[1],int(sys.argv[2]),int(sys.argv[3]),int(sys.argv[4]))
+elif len(sys.argv) >= 4:
   parse_and_sched(sys.argv[1],int(sys.argv[2]),int(sys.argv[3]))
 else:  
   parse_and_sched(sys.argv[1],int(sys.argv[2]))
