@@ -290,7 +290,7 @@ def parse_annotations(d_set,dl_dir,dl_cls_by_filter=-1):
 
   return annotations,clips,vids
 
-def sched_downloads(d_set,dl_dir,num_threads,vids,rec_ind=-1,offset_min=-1,offset_max=-1):
+def sched_downloads(d_set,dl_dir,num_threads,vids,rec_ind=-1,offset_min=-1,offset_max=-1,FREE_SPACE_LIMIT=-1):
   d_set_dir = dl_dir+'/'+d_set+'/'
 
   # Make the directory for this dataset
@@ -304,7 +304,7 @@ def sched_downloads(d_set,dl_dir,num_threads,vids,rec_ind=-1,offset_min=-1,offse
     vids_tmp = []
     for vid in vids:
       rec_ind = rec_ind + 1
-      if rec_ind >= offset_min and rec_ind <= offset_max:
+      if rec_ind >= offset_min and rec_ind < offset_max:
         vids_tmp.append(vid)
 
     vids = vids_tmp
@@ -317,9 +317,22 @@ def sched_downloads(d_set,dl_dir,num_threads,vids,rec_ind=-1,offset_min=-1,offse
       sys.stderr.write( \
         "Downloaded video: {} / {} \r".format(i, len(vids)))
 
+      if not FREE_SPACE_LIMIT == -1 and get_free_space_in_dir_mount(dl_dir) <= FREE_SPACE_LIMIT:
+        prit("free space limit reached. terminating process.")
+        exit()
+
   if len(vids) == 0 and not offset_min == -1:
     print( 'No video found for downloading in dataset '+d_set+'. If this is not intended behaviour, please check whether your offset is set correctly or not' )
   else:
     print( d_set+': All videos downloaded' )
 
   return rec_ind
+
+def get_free_space_in_dir_mount(path):
+  "return free space in mb of the mount where specified path is stored"
+  df = subprocess.Popen(["df", path], stdout=subprocess.PIPE)
+  output = df.communicate()[0].split()
+  # print(output)
+  # print(output[10])
+  return  float(output[10])/1024.0
+  
