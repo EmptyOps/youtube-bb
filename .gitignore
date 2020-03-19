@@ -1,3 +1,5 @@
 yt_bb_detection_train.csv.gz
 yt_bb_detection_train.csv
 __*
+*.csv
+*.pickle
